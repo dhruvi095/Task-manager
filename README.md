@@ -64,6 +64,13 @@ This project demonstrates real-world backend concepts like authentication, autho
 - `PUT /api/tasks/:id` – Update task
 - `DELETE /api/tasks/:id` – Delete task
 
+## setup
+### <code>.env</code> 
+```js
+PORT=5000
+connection_string=your database url
+AccessToken_Secret=your access token key
+```
 
 ## 👩‍💻 Author
 
