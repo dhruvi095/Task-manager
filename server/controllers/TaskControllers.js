@@ -10,10 +10,9 @@ const getTasks = asyncHandler(async (req, res) => {
   const limit = Number(req.query.limit) || 10;
   const skip = (page - 1) * limit;
 
-  const { title, sort, status, priority } = req.query;
+  const { title, sort, status, priority ,from_Date,to_Date} = req.query;
 
   const queryObject = {};
-
   if (req.user.role !== "admin") {
     queryObject.user = req.user._id;
   }
@@ -21,6 +20,13 @@ if(title){
     queryObject.title = { $regex: title.trim(), $options: "i" };
   }
 
+if(from_Date && !to_Date ){
+  queryObject.dueDate = { $gte: new Date(from_Date) };  
+}else if(from_Date && to_Date){
+  queryObject.dueDate = { $gte: new Date(from_Date), $lte: new Date(to_Date) };
+}else if(!from_Date && to_Date){
+  queryObject.dueDate = { $lte: new Date(to_Date) };
+}
 
 if (status) {
   queryObject.status = { $regex: `^${status}$`, $options: "i" };
@@ -49,7 +55,7 @@ if (priority) {
 const postTasks = asyncHandler(async (req, res) => {
   if (!req.user) {
     res.status(401);
-    throw new Error("User not authorized");
+    throw new Error("User not found");
   }
 
   const { title, description, status, priority, dueDate } = req.body;

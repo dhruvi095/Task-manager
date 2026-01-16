@@ -19,7 +19,8 @@ const Home = () => {
   const [priorityFilter, setPriorityFilter] = useState("");
   const [totalPages, setTotalPages] = useState(1);
   const [editingtaskId, setEditingtaskId] = useState(null);
-  
+  const [fromDate, setFromDate] = useState("");
+  const [to_Date, setTo_Date] = useState("");
   const navigate = useNavigate();
   const handleinput = (e) => {
     const { name, value } = e.target;
@@ -46,7 +47,7 @@ const Home = () => {
     }
 
   }
-    const handle = async (event) => {
+  const handle = async (event) => {
     event.preventDefault();
     setError("");
     setSuccess("");
@@ -100,7 +101,7 @@ const Home = () => {
       setError(err.message);
     }
   };
-    const handleEdit = (task) => {
+  const handleEdit = (task) => {
     setTitle(task.title);
     setDescription(task.description);
     setPriority(task.priority);
@@ -121,6 +122,8 @@ const Home = () => {
         ...(search && { title: search.trim() }),
         ...(statusFilter && { status: statusFilter }),
         ...(priorityFilter && { priority: priorityFilter }),
+        ...(fromDate && { from_Date: fromDate }),
+        ...(to_Date && { to_Date: to_Date }),
       });
 
       const res = await fetch(
@@ -142,9 +145,9 @@ const Home = () => {
 
   useEffect(() => {
     fetchTasks();
-  }, [search, sort, page, statusFilter, priorityFilter]);
+  }, [search, sort, page, statusFilter, priorityFilter, fromDate, to_Date]);
 
- const handleDelete = async (taskId) => {
+  const handleDelete = async (taskId) => {
     try {
       const token = localStorage.getItem("token");
 
@@ -261,10 +264,10 @@ const Home = () => {
 
         <div className="w-full md:w-2/3">
 
-          <div className="bg-white border p-3 mb-4 flex gap-3">
+          <div className="bg-white border p-3 mb-4 flex gap-2 justify-between flex-wrap">
             <input
               type="text"
-              placeholder="Search..."
+              placeholder="Search by title..."
               className="flex-1 border px-3 py-2"
               value={search}
               onChange={(e) => {
@@ -311,12 +314,17 @@ const Home = () => {
               <option value="asc">Due Date asc</option>
               <option value="desc">Due Date desc</option>
             </select>
+            <div className="flex items-center gap-0.5">
+              <label htmlFor="fromDate" >From :</label>
+              <input type="Date" className="border bg-teal-950 px-3 py-1 text-white"
+                value={fromDate} onChange={(e) => setFromDate(e.target.value)} />
+            </div>
+            <div className="flex items-center gap-0.5">
+              <label htmlFor="toDate">To :</label>
+              <input type="Date" className="border bg-teal-950 px-3 py-1 text-white"
+                value={to_Date} onChange={(e) => setTo_Date(e.target.value)} />
+            </div>
           </div>
-
-
-
-
-
 
           <div className="bg-white border p-4 mb-3">
             {tasks.length === 0 ? (
@@ -363,11 +371,26 @@ const Home = () => {
               Prev
             </button>
 
-            <span className="border px-3 py-1">
-              {page} / {totalPages}
-            </span>
+            <span className="flex gap-2 px-3 py-1">
+              {Array.from({ length: totalPages }).map((_, index) => {
+                const currentPage = index + 1;
 
-            <button
+                return (
+                  <button
+                    key={currentPage}
+                    onClick={() => setPage(currentPage)}
+                    className={`px-2 py-1 border rounded
+                        ${page === currentPage
+                        ? "bg-teal-950 text-white"
+                        : ""
+                      }`}
+                  >
+                    {currentPage}
+                  </button>
+                );
+              })}
+            </span>
+             <button
               disabled={page === totalPages}
               onClick={() => setPage(page + 1)}
               className="border px-3 py-1 disabled:opacity-50"

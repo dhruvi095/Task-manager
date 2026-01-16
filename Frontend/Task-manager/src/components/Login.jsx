@@ -38,7 +38,7 @@ const Login = () => {
             const data = await res.json()
 
             if (!res.ok) {
-                setError(data.message)
+                setError("You are not registered user, please register first")
                 return
             }
             localStorage.setItem("userId", data.user.id);
