@@ -1,0 +1,8 @@
+Git Rules
+
+any project make new branch and modify code than commit and add pull request 
+left side main branch and right side our branch than add pull request
+
+first commit your changes then push code then request pr then once sir review your pr then close pr 
+
+after git pull always run npm i commands

@@ -25,8 +25,12 @@ const taskSchema = mongoose.Schema({
   },
   user : {
     type : Schema.Types.ObjectId,
-    ref : "User",
+    ref : "UserSchema",
     required: true,
+  },
+  
+  file:{
+    type: String
   }
 } ,{timestamps:true})
 
