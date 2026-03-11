@@ -1,21 +1,19 @@
-const Header = ({ onAddTask, onLogout }) => {
+const Header = ({ onLogout, onAddTask }) => {
   return (
     <div className="bg-white border-b px-6 py-4 flex justify-between items-center">
-      <h1 className="text-xl font-bold text-black">
-        Task Manager
-      </h1>
+      <h1 className="text-xl font-bold">Task Manager</h1>
 
       <div className="flex gap-3">
         <button
           onClick={onAddTask}
-          className="border border-black bg-teal-950 px-4 py-1 text-white"
+          className="bg-teal-950 text-white px-4 py-2 rounded"
         >
-          Add Task
+          + Add Task
         </button>
 
         <button
           onClick={onLogout}
-          className="border border-black bg-teal-950 px-4 py-1 text-white"
+          className="border px-4 py-2 rounded"
         >
           Logout
         </button>

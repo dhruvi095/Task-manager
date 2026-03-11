@@ -1,6 +1,7 @@
 const express = require('express');
 const errorHandler = require('./middleware/errorHandler');
 const connectDB = require('./config/dbConnection'); 
+const subtaskRoutes = require("./routes/SubTaskRoutes");
 const dotenv = require('dotenv').config();
 const cors = require('cors')
 const path = require('path');
@@ -24,6 +25,8 @@ app.use("/uploads",express.static(path.join(__dirname,"uploads")))
 app.use("/api/tasks", require("./routes/TasksRoutes"))
 app.use("/", require("./routes/sendemailRoutes"))
 app.use("/api/auth", require("./routes/AuthRoutes"))
+app.use("/api", subtaskRoutes);
+
 
 app.use(errorHandler)
 app.listen(port,()=>{

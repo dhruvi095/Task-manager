@@ -1,5 +1,7 @@
 const mongoose = require('mongoose')
 const {Schema} = require('mongoose')
+const subTaskSchema = require("./SubTaskModels"); 
+
 const taskSchema = mongoose.Schema({ 
      title : {
     type : String,
@@ -31,7 +33,8 @@ const taskSchema = mongoose.Schema({
   
   file:{
     type: String
-  }
+  },
+  subtasks : [subTaskSchema]
 } ,{timestamps:true})
 
 module.exports = mongoose.model("task",taskSchema)

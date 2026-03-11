@@ -39,6 +39,7 @@ if (priority) {
   const totalTasks = await Tasks.countDocuments(queryObject);
   const tasks = await Tasks.find(queryObject)
   .populate("user","name , role") 
+    .select("-__v")
     .sort({ dueDate: sortOrder })
     .skip(skip)
     .limit(limit);
@@ -85,33 +86,48 @@ const postTasks = asyncHandler(async (req, res) => {
 
 //for update task by id
 //put method PUT /api/tasks/:id
+
+
 const putTasks = asyncHandler(async (req, res) => {
-    const task = await Tasks.findById(req.params.id)
-    
-    if (!task) {
-        res.status(404)
-        throw new Error("Task not found!")
-    }
-  if (req.user.role !== "admin" && task.user.toString() !== req.user._id.toString()) {
+  const task = await Tasks.findById(req.params.id);
+
+  if (!task) {
+    res.status(404);
+    throw new Error("Task not found!");
+  }
+
+  if (
+    req.user.role !== "admin" &&
+    task.user.toString() !== req.user._id.toString()
+  ) {
     res.status(403);
     throw new Error("You don't have permission to update this task!");
   }
-  if (req.file) {
-task.file = req.file.filename;
-}
-     const updatedTask = await Tasks.findByIdAndUpdate(
-        req.params.id,
-        req.body,
-        { new: true }
-    )
 
-    if (updatedTask.status === "Completed") {
-      
-      await transporter.sendMail({
-        from: '"Dhruvi" <dhruvisangadiya@gmail.com>',
-        to: 'dhruvisangadiya1245@gmail.com',
-        subject: "Task Completed",
-        text: `Your task has completed ${task}`, // Plain-text version of the message
+  const updateData = {
+    ...req.body,
+  };
+
+  if (req.file) {
+    updateData.file = req.file.filename;
+  }
+
+  const updatedTask = await Tasks.findByIdAndUpdate(
+    req.params.id,
+    updateData,
+    { new: true }
+  );
+
+  // ✅ SEND MAIL WHEN COMPLETED
+  if (
+    task.status !== "completed" &&
+    updatedTask.status === "completed"
+  ) {
+    await transporter.sendMail({
+      from: '"Dhruvi" <dhruvisangadiya@gmail.com>',
+      to: "dhruvisangadiya1245@gmail.com",
+      subject: "Task Completed 🎉",
+       text: `Your task has completed ${task}`, // Plain-text version of the message
         html: `
         <h1>${task.title}</h1>
         <p>${task.description}</p>
@@ -119,13 +135,10 @@ task.file = req.file.filename;
         <p>${task.status}</p>
         <p>${task.priority}</p>
         `,
-      });
-    }
-    res.json(updatedTask) 
-   
+  })}
 
-   
-})
+  res.json(updatedTask);
+});
 
 //for get task by id
 //get method GET /api/tasks/:id

@@ -1,13 +1,11 @@
-import { useState } from 'react'
 import Register from './components/pages/Register'
 import './App.css'
 import Login from './components/pages/Login'
 import {Routes,Route} from 'react-router-dom'
-import Home from './components/pages/Home'
+import Dashboard from './components/pages/Dashboard'
 import ProtectedRoute from './components/pages/ProtectedRoute'
 
 function App() {
-  const [count, setCount] = useState(0)
   
   return (
     <>
@@ -15,10 +13,10 @@ function App() {
       <Route path="/" index element={<Register/>}/>
       
       <Route
-        path="/home"
+        path="/Dashboard"
         element={
           <ProtectedRoute>
-            <Home />
+            <Dashboard />
           </ProtectedRoute>
         }
       />
