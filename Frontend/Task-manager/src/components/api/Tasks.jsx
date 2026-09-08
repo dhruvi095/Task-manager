@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:5001/api/tasks";
+const API_URL = "http://localhost:5000/api/tasks";
 
 const getToken = () => localStorage.getItem("token");
 

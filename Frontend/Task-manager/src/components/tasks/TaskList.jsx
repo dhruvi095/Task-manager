@@ -63,7 +63,7 @@ const TaskList = ({ tasks = [], onEdit, onDelete, isAdmin }) => {
                 {task.file ? (
 
                   <a
-                    href={`http://localhost:5001/uploads/${task.file.replaceAll(
+                    href={`http://localhost:5000/uploads/${task.file.replaceAll(
                       "\\",
                       "/"
                     )}`}
